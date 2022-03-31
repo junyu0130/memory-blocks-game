@@ -38,10 +38,16 @@ class Blocks {
 
   setImg() {
     shuffle(this.imgData);
-    for (let i = 0; i < this.imgData.length; i++) {
-      const img = this.imgData[i];
-      $(".blocks." + this.mode + " .block" + i + " i").addClass("bi-" + img);
-    }
+    this.imgData.forEach((d, i) => {
+      $(".blocks." + this.mode + " .block" + i + " i").addClass("bi-" + d);
+    });
+  }
+
+  flipImg(index) {
+    $(".blocks." + this.mode + " .block" + index + " i").fadeToggle(
+      100,
+      () => {}
+    );
   }
 }
 
