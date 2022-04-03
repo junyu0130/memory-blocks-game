@@ -21,6 +21,11 @@ const iconSet = [
   "chat-square-quote",
 ];
 
+var soundSet = [
+  { name: "correct", set: [1, 3, 5, 8] },
+  { name: "wrong", set: [2, 4, 5.5, 7] },
+];
+
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1));
@@ -52,15 +57,40 @@ class Blocks {
 }
 
 class Game {
-  constructor() {
+  constructor(setAssign) {
     this.blocks = new Blocks(iconSet, "x4");
     this.setTiming(0, 30);
     this.ansSet = [];
     this.status = "waiting";
+    this.soundSet = setAssign.map((d, i) => ({
+      name: d.name,
+      // Convert digital arrays to Audio arrays
+      set: d.set.map((pitch) => this.getAudio(pitch)),
+    }));
+  }
+
+  playSet(type) {
+    let set = this.soundSet.find((set) => set.name == type).set;
+    set.forEach((obj) => {
+      obj.currentTime = 0;
+      obj.play();
+    });
+  }
+
+  getAudio(pitch) {
+    return new Audio(
+      "https://awiclass.monoame.com/pianosound/set/" + pitch + ".wav"
+    );
   }
 
   setTiming(min, sec) {
     this.timing = (min * 60 + sec) * 1000;
+  }
+
+  getNormalTime(ms) {
+    let min = parseInt(ms / 60000);
+    let sec = parseInt((ms % 60000) / 1000);
+    return `${min}:${sec}`;
   }
 
   setAnsSet() {
@@ -82,6 +112,11 @@ class Game {
         this.blocks.flipImg(i);
       }
     }
+  }
+
+  setMessage(msg) {
+    console.log(msg);
+    $(".status").text(msg);
   }
 
   startUserInput() {
@@ -110,8 +145,11 @@ class Game {
         ) {
           console.log("correct!");
           // correct sound
+          this.playSet("correct");
         } else {
           console.log("wrong");
+          // wrong sound
+          this.playSet("wrong");
         }
         this.userInput = [];
       }
@@ -119,22 +157,30 @@ class Game {
   }
 
   startGame() {
+    // hide start game btn
+    $(".startBtn").addClass("hide");
+
     // set image
     this.blocks.setImg();
 
     // setup answer set
     this.setAnsSet();
 
-    // // start timer
-    // setTimeout(() => {
-    //   // hide all image
-    //   this.hideAllImg();
-    // }, this.timing);
+    // start timer
+    var timer = setInterval(() => {
+      this.setMessage("Time left: " + this.getNormalTime(this.timing));
+      if (this.timing == 0) {
+        clearInterval(timer);
 
-    // start and check answer
-    this.startUserInput();
+        // hide all image
+        this.hideAllImg();
+
+        // start and check answer
+        this.startUserInput();
+      }
+      this.timing -= 1000;
+    }, 1000);
   }
 }
 
-var g = new Game();
-g.startGame();
+var g = new Game(soundSet);
