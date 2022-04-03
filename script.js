@@ -61,6 +61,7 @@ class Game {
     this.blocks = new Blocks(iconSet, "x4");
     this.setTiming(0, 30);
     this.ansSet = [];
+    this.ansCount = [0, 0];
     this.status = "waiting";
     this.soundSet = setAssign.map((d, i) => ({
       name: d.name,
@@ -116,7 +117,7 @@ class Game {
 
   setMessage(msg) {
     console.log(msg);
-    $(".status").text(msg);
+    $(".status").html(msg);
   }
 
   startUserInput() {
@@ -146,11 +147,17 @@ class Game {
           console.log("correct!");
           // correct sound
           this.playSet("correct");
+          // calculate correct count
+          this.ansCount[1] += 1;
         } else {
           console.log("wrong");
           // wrong sound
           this.playSet("wrong");
+          this.ansCount[0] += 1;
         }
+        this.setMessage(
+          `Correct: ${this.ansCount[1]}<br/>Wrong: ${this.ansCount[0]}`
+        );
         this.userInput = [];
       }
     }
