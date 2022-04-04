@@ -222,10 +222,19 @@ var g = undefined;
 var nowLevel = 1;
 var nowMode = "x4";
 
+function changeBlocksMode(newMode) {
+  $(".blocks." + g.blocks.mode).addClass("hide");
+  $(".blocks." + newMode).removeClass("hide");
+}
+
 function startPlay(status) {
   if (status == "replay") {
     g.clsImg();
     nowLevel++;
+    if (nowLevel == 3) {
+      nowMode = "x6";
+      changeBlocksMode(nowMode);
+    }
   }
   $(".level").text("Level " + nowLevel);
   shuffle(iconSet);
