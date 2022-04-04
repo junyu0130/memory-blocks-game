@@ -55,9 +55,9 @@ class Blocks {
 }
 
 class Game {
-  constructor(setAssign, level, mode) {
+  constructor(setAssign, level, mode, timeSec) {
     this.blocks = new Blocks(iconSet, mode);
-    this.setTiming(0, 30);
+    this.setTiming(0, timeSec);
     this.ansSet = [];
     this.ansCount = [0, 0];
     this.status = "waiting";
@@ -123,7 +123,6 @@ class Game {
   }
 
   setMessage(msg) {
-    // console.log(msg);
     $(".status").html(msg);
   }
 
@@ -142,7 +141,6 @@ class Game {
         this.blocks.flipImg(inputNum);
         this.userInput.push(inputNum);
         this.userInput.sort((a, b) => a - b);
-        // console.log(this.userInput);
       }
 
       if (this.userInput.length == 2) {
@@ -151,13 +149,11 @@ class Game {
             (ans) => ans[0] == this.userInput[0] && ans[1] == this.userInput[1]
           ) != -1
         ) {
-          // console.log("correct!");
           // correct sound
           this.playSet("correct");
           // calculate correct count
           this.ansCount[1] += 1;
         } else {
-          // console.log("wrong");
           // wrong sound
           this.playSet("wrong");
           this.ansCount[0] += 1;
@@ -221,23 +217,34 @@ class Game {
 var g = undefined;
 var nowLevel = 1;
 var nowMode = "x4";
+var nowTimeSec = 40;
 
 function changeBlocksMode(newMode) {
-  $(".blocks." + g.blocks.mode).addClass("hide");
-  $(".blocks." + newMode).removeClass("hide");
+  if (newMode != g.blocks.mode) {
+    $(".blocks." + g.blocks.mode).addClass("hide");
+    $(".blocks." + newMode).removeClass("hide");
+  }
 }
 
 function startPlay(status) {
   if (status == "replay") {
     g.clsImg();
     nowLevel++;
-    if (nowLevel == 3) {
+    if (nowLevel % 3 == 0) {
       nowMode = "x6";
       changeBlocksMode(nowMode);
+    } else {
+      nowMode = "x4";
+      changeBlocksMode(nowMode);
+    }
+
+    nowTimeSec -= 20;
+    if (nowTimeSec == 0) {
+      nowTimeSec = 60;
     }
   }
   $(".level").text("Level " + nowLevel);
   shuffle(iconSet);
-  g = new Game(soundSet, nowLevel, nowMode);
+  g = new Game(soundSet, nowLevel, nowMode, nowTimeSec);
   g.startGame();
 }
