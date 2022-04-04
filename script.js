@@ -33,8 +33,6 @@ function shuffle(array) {
   }
 }
 
-shuffle(iconSet);
-
 class Blocks {
   constructor(iconSet, mode) {
     this.mode = mode;
@@ -68,6 +66,14 @@ class Game {
       // Convert digital arrays to Audio arrays
       set: d.set.map((pitch) => this.getAudio(pitch)),
     }));
+  }
+
+  clsImg() {
+    this.blocks.imgData.forEach((d, i) => {
+      $(".blocks." + this.blocks.mode + " .block" + i + " i").removeClass(
+        "bi-" + d
+      );
+    });
   }
 
   playSet(type) {
@@ -116,7 +122,7 @@ class Game {
   }
 
   setMessage(msg) {
-    console.log(msg);
+    // console.log(msg);
     $(".status").html(msg);
   }
 
@@ -135,7 +141,7 @@ class Game {
         this.blocks.flipImg(inputNum);
         this.userInput.push(inputNum);
         this.userInput.sort((a, b) => a - b);
-        console.log(this.userInput);
+        // console.log(this.userInput);
       }
 
       if (this.userInput.length == 2) {
@@ -144,13 +150,13 @@ class Game {
             (ans) => ans[0] == this.userInput[0] && ans[1] == this.userInput[1]
           ) != -1
         ) {
-          console.log("correct!");
+          // console.log("correct!");
           // correct sound
           this.playSet("correct");
           // calculate correct count
           this.ansCount[1] += 1;
         } else {
-          console.log("wrong");
+          // console.log("wrong");
           // wrong sound
           this.playSet("wrong");
           this.ansCount[0] += 1;
@@ -159,6 +165,27 @@ class Game {
           `Correct: ${this.ansCount[1]}<br/>Wrong: ${this.ansCount[0]}`
         );
         this.userInput = [];
+      }
+
+      // end game
+      if (this.ansCount[0] + this.ansCount[1] == this.blocks.size / 2) {
+        setTimeout(() => {
+          var isReplay = window.confirm("Do you want to play the next game?");
+          if (isReplay) {
+            let timeLeft = 5000;
+            var timer = setInterval(() => {
+              $(".status").toggleClass("flash");
+              this.setMessage(
+                "OK, next game begin in: " + this.getNormalTime(timeLeft)
+              );
+              if (timeLeft == 0) {
+                clearInterval(timer);
+                startPlay("replay");
+              }
+              timeLeft -= 1000;
+            }, 1000);
+          }
+        }, 500);
       }
     }
   }
@@ -190,4 +217,12 @@ class Game {
   }
 }
 
-var g = new Game(soundSet);
+var g = undefined;
+function startPlay(status) {
+  if (status == "replay") {
+    g.clsImg();
+  }
+  shuffle(iconSet);
+  g = new Game(soundSet);
+  g.startGame();
+}
