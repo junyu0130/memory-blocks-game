@@ -55,12 +55,13 @@ class Blocks {
 }
 
 class Game {
-  constructor(setAssign) {
-    this.blocks = new Blocks(iconSet, "x4");
+  constructor(setAssign, level, mode) {
+    this.blocks = new Blocks(iconSet, mode);
     this.setTiming(0, 30);
     this.ansSet = [];
     this.ansCount = [0, 0];
     this.status = "waiting";
+    this.level = level;
     this.soundSet = setAssign.map((d, i) => ({
       name: d.name,
       // Convert digital arrays to Audio arrays
@@ -218,11 +219,16 @@ class Game {
 }
 
 var g = undefined;
+var nowLevel = 1;
+var nowMode = "x4";
+
 function startPlay(status) {
   if (status == "replay") {
     g.clsImg();
+    nowLevel++;
   }
+  $(".level").text("Level " + nowLevel);
   shuffle(iconSet);
-  g = new Game(soundSet);
+  g = new Game(soundSet, nowLevel, nowMode);
   g.startGame();
 }
