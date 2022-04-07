@@ -153,10 +153,12 @@ class Game {
           this.playSet("correct");
           // calculate correct count
           this.ansCount[1] += 1;
+          totalAns[1] += 1;
         } else {
           // wrong sound
           this.playSet("wrong");
           this.ansCount[0] += 1;
+          totalAns[0] += 1;
         }
         this.setMessage(
           `Correct: ${this.ansCount[1]}<br/>Wrong: ${this.ansCount[0]}`
@@ -181,6 +183,14 @@ class Game {
               }
               timeLeft -= 1000;
             }, 1000);
+          } else {
+            this.setMessage(
+              `You have played a total of <strong>${nowLevel}</strong> level.
+              <br/>
+              You have a correct rate of <strong>${
+                (100 * totalAns[1]) / (totalAns[0] + totalAns[1])
+              }%</strong>!`
+            );
           }
         }, 500);
       }
@@ -218,6 +228,7 @@ var g = undefined;
 var nowLevel = 1;
 var nowMode = "x4";
 var nowTimeSec = 40;
+var totalAns = [0, 0];
 
 function changeBlocksMode(newMode) {
   if (newMode != g.blocks.mode) {
