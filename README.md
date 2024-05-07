@@ -1,5 +1,11 @@
 # Memory Blocks Home Work2 - Flip Image(翻圖片)
 
+> [!NOTE]
+>
+> 以下內容為當時課堂中，教授提供的專案說明，其中包含課程的專屬內容
+>
+> The following is a description of the project provided by the professor in the classroom at that time, which includes course-specific content
+
 ## 上傳格式說明：【請依照格式要求上傳繳交，不符合規格一律視為未上傳】
 
 請將你在 codepen 中完成的檔案 Export, and Download 在自己的電腦中，解壓縮，並找到 dist 的資料夾，`index.html` 內的 `<title>`，將其內容改為 `<title>學號_姓名</title>`，然後壓縮該資料夾（內部應有三個檔案 `index.html`, `script.js`, `style.css`）存成姓名.zip 上傳到數位學習平台上

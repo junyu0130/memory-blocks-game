@@ -184,12 +184,16 @@ class Game {
               timeLeft -= 1000;
             }, 1000);
           } else {
+            var correctRate = (
+              (100 * totalAns[1]) /
+              (totalAns[0] + totalAns[1])
+            ).toFixed(2);
             this.setMessage(
               `You have played a total of <strong>${nowLevel}</strong> level.
               <br/>
-              You have a correct rate of <strong>${
-                (100 * totalAns[1]) / (totalAns[0] + totalAns[1])
-              }%</strong>!`
+              You have a correct rate of <strong>${correctRate}%</strong>!
+              <br/>
+              If you want to play again, please refresh this page.`
             );
           }
         }, 500);
